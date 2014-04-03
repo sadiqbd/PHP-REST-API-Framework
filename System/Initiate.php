@@ -80,7 +80,7 @@ class Initiate {
                 $controller->$functionToCall();
             } else {
                 array_unshift($this->params, $functionToCall);
-                $this->processDefaultActoin($this->params);
+                $this->processDefaultActoin($controller, $this->params);
             }
         } else {
 
@@ -88,14 +88,29 @@ class Initiate {
                 call_user_func_array(array($controller, $functionToCall), $this->params);
             } else {
                 array_unshift($this->params, $functionToCall);
-                $this->processDefaultActoin($this->params);
+                $this->processDefaultActoin($controller, $this->params);
             }
         }
     }
     
-    function processDefaultActoin($params = array())
+    function processDefaultActoin(&$controller, $params = array())
     {
-        
+        switch ($this->method) {
+            case "put":
+                call_user_func_array(array($controller, getConfig('default_put_action')), $this->params);
+                break;
+            case "post":
+                call_user_func_array(array($controller, getConfig('default_post_action')), $this->params);
+                break;
+            case "delete":
+                call_user_func_array(array($controller, getConfig('default_delete_action')), $this->params);
+                break;
+            case "get":
+                call_user_func_array(array($controller, getConfig('default_get_action')), $this->params);
+                break;
+            default:
+                break;
+        }
     }
 
 }

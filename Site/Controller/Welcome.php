@@ -17,5 +17,18 @@ class welcome extends \System\Controller
         echo $p2;
         echo "Test";
     }
+    
+    function get($id = "")
+            
+    {
+        if(empty($id))
+            echo "All get";
+        else 
+            echo $id." get";
+    }
+    
+    function delete($id) {
+        echo $id." deleted";
+    }
 }
     
