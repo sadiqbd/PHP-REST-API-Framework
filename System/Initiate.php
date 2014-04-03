@@ -24,8 +24,8 @@ class Initiate {
     }
 
     function parseHandler() {
-        
-        $this->method = $_SERVER['REQUEST_METHOD'];
+
+        $this->method = strtolower($_SERVER['REQUEST_METHOD']);
         $handler = explode("/", $_GET[getConfig('route_handler')]);
         unset($_GET[getConfig('route_handler')]);
 
@@ -34,9 +34,11 @@ class Initiate {
                 $this->module = $handler[0];
                 unset($handler[0]);
                 $handler = array_values($handler);
-            }else
+            }
+            else
                 $this->module = getConfig('default_module');
-        }else
+        }
+        else
             $this->module = getConfig('default_module');
 
 
@@ -44,39 +46,56 @@ class Initiate {
             $this->controller = $handler[0];
             unset($handler[0]);
             $handler = array_values($handler);
-        }else
+        }
+        else
             $this->controller = getConfig('default_controller');
 
         if (isset($handler[0]) && !empty($handler[0])) {
             $this->action = $handler[0];
             unset($handler[0]);
             $handler = array_values($handler);
-        }else
+        }
+        else
             $this->action = getConfig('default_action');
 
         if (isset($handler[0]) && !empty($handler[0])) {
             $this->params = $handler;
             unset($handler);
-        }else
+        }
+        else
             $this->params = array();
     }
 
     function loadDB() {
         $this->DB = new \System\DB();
     }
-    
-    function start()
-    {
+
+    function start() {
         $this->parseHandler();
-        $classToLoad = "\\".ucfirst($this->module)."\\Controller\\".ucfirst($this->controller);
+        $classToLoad = "\\" . ucfirst($this->module) . "\\Controller\\" . ucfirst($this->controller);
         $controller = new $classToLoad();
         $functionToCall = $this->action;
-        if(empty($this->params))
-        {
-            $controller->$functionToCall();
-        }else{
-            call_user_func_array(array($controller,$functionToCall),$this->params);
+        if (empty($this->params)) {
+            if (method_exists($controller, $functionToCall)) {
+                $controller->$functionToCall();
+            } else {
+                array_unshift($this->params, $functionToCall);
+                $this->processDefaultActoin($this->params);
+            }
+        } else {
+
+            if (method_exists($controller, $functionToCall)) {
+                call_user_func_array(array($controller, $functionToCall), $this->params);
+            } else {
+                array_unshift($this->params, $functionToCall);
+                $this->processDefaultActoin($this->params);
+            }
         }
+    }
+    
+    function processDefaultActoin($params = array())
+    {
         
     }
+
 }
