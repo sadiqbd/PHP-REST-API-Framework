@@ -1,6 +1,23 @@
 {
     "name": "sadiqbd/PHP-REST-API-Framework",
+	"type": "Framework",
     "description": "PHP REST API Framework.",
+	"keywords": ["Framework","REST","API","rest server","xml","json"],
+	"homepage": "https://github.com/sadiqbd/PHP-REST-API-Framework",
+	"license": "Apache v2 License",
+	
+	"authors": [
+		{
+			"name": "Sadiqur Rahman",
+			"homepage": "http://www.hack420.com",
+			"email": "sadiqbd@gmail.com"
+		}
+	],
+	
+	"config": {
+        "vendor-dir": "Library"
+    },
+	
     "require": {
         "php": ">=5.3.0",
         "phpmailer/phpmailer": "dev-master"
